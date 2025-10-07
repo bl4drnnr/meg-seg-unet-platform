@@ -12,8 +12,8 @@ MedSeg Platform is a medical image segmentation application using U-Net architec
 
 The system consists of three main components:
 
-1. **Frontend** (`meg-seg-frontend/`): Angular 17 application providing the UI
-2. **Backend** (`meg-seg-backend/`): NestJS API server for orchestration and business logic
+1. **Frontend** (`med-seg-frontend/`): Angular 17 application providing the UI
+2. **Backend** (`med-seg-backend/`): NestJS API server for orchestration and business logic
 3. **ML Processing**: Python scripts (to be implemented) for U-Net training and inference
 
 ### Data Flow
@@ -42,7 +42,7 @@ npm run format:backend     # Format backend code (Prettier + ESLint)
 npm run format:frontend    # Format frontend code (Prettier + ESLint)
 ```
 
-### Backend (`meg-seg-backend/`)
+### Backend (`med-seg-backend/`)
 ```bash
 npm run start:dev          # Start in watch mode (port 4201)
 npm run build              # Build for production
@@ -54,7 +54,7 @@ npm run test:e2e           # Run end-to-end tests
 npm run format             # Format with Prettier + ESLint
 ```
 
-### Frontend (`meg-seg-frontend/`)
+### Frontend (`med-seg-frontend/`)
 ```bash
 npm start                  # Start dev server (ng serve)
 npm run build              # Build for production
@@ -76,7 +76,7 @@ npm run format             # Format with Prettier + ESLint
 Backend allows CORS from: localhost:4200, localhost:4202, localhost:8080, 127.0.0.1:8080, localhost:4000
 
 ### Request Size Limits
-Backend accepts JSON/URL-encoded payloads up to 50mb (configured in `meg-seg-backend/src/main.ts:18-19`)
+Backend accepts JSON/URL-encoded payloads up to 50mb (configured in `med-seg-backend/src/main.ts:18-19`)
 
 ## Key Workflows
 
@@ -102,7 +102,7 @@ Backend accepts JSON/URL-encoded payloads up to 50mb (configured in `meg-seg-bac
 
 ## Code Architecture Notes
 
-- **Monorepo structure**: Two separate npm projects (`meg-seg-backend`, `meg-seg-frontend`) with root-level convenience scripts
+- **Monorepo structure**: Two separate npm projects (`med-seg-backend`, `med-seg-frontend`) with root-level convenience scripts
 - **Backend**: Standard NestJS structure with modules, controllers, and services (currently minimal setup)
 - **Frontend**: Angular 17 standalone components architecture
 - **No authentication**: Single-user system for academic purposes
