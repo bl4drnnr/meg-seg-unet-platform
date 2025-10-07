@@ -41,16 +41,6 @@ export class DatasetsService {
     const uploadId = uuidv4();
     const extractPath = path.join(tempDir, uploadId);
 
-    // Create initial database record
-    let dataset = await this.create({
-      name: datasetName,
-      s3Bucket: this.apiConfigService.awsS3BucketName,
-      s3Key: `datasets/${uploadId}`,
-      fileCount: 0,
-      totalSizeMb: 0,
-      status: 'uploading'
-    });
-
     try {
       // Ensure temp directory exists
       if (!fs.existsSync(tempDir)) {
@@ -84,17 +74,24 @@ export class DatasetsService {
       await this.s3Service.uploadDirectory(imagesDir, `${s3KeyPrefix}/images`);
       await this.s3Service.uploadDirectory(masksDir, `${s3KeyPrefix}/masks`);
 
-      // Update database record
-      dataset.fileCount = fileCount;
-      dataset.totalSizeMb = parseFloat(totalSizeMb.toFixed(2));
-      dataset.status = 'ready';
-      dataset = await this.datasetsRepository.save(dataset);
+      // Create database record only after successful upload
+      const dataset = await this.create({
+        name: datasetName,
+        s3Bucket: this.apiConfigService.awsS3BucketName,
+        s3Key: s3KeyPrefix,
+        fileCount: fileCount,
+        totalSizeMb: parseFloat(totalSizeMb.toFixed(2)),
+        status: 'ready'
+      });
 
       return dataset;
     } catch (error) {
-      // Mark as error in database
-      dataset.status = 'error';
-      await this.datasetsRepository.save(dataset);
+      // If S3 upload partially succeeded, try to clean up
+      try {
+        await this.s3Service.deleteDirectory(`datasets/${uploadId}`);
+      } catch (cleanupError) {
+        console.error('Failed to cleanup S3 after error:', cleanupError);
+      }
 
       throw error;
     } finally {
@@ -116,5 +113,31 @@ export class DatasetsService {
     }
     dataset.status = status;
     return this.datasetsRepository.save(dataset);
+  }
+
+  async updateName(id: number, name: string): Promise<Dataset> {
+    const dataset = await this.datasetsRepository.findOne({ where: { id } });
+    if (!dataset) {
+      throw new Error('Dataset not found');
+    }
+    dataset.name = name;
+    return this.datasetsRepository.save(dataset);
+  }
+
+  async delete(id: number): Promise<void> {
+    const dataset = await this.datasetsRepository.findOne({ where: { id } });
+    if (!dataset) {
+      throw new Error('Dataset not found');
+    }
+
+    // Delete from S3
+    try {
+      await this.s3Service.deleteDirectory(dataset.s3Key);
+    } catch (error) {
+      console.error(`Failed to delete dataset from S3: ${error.message}`);
+    }
+
+    // Delete from database
+    await this.datasetsRepository.remove(dataset);
   }
 }

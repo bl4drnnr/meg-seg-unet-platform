@@ -3,44 +3,83 @@
 
   <!-- Upload Section -->
   <div class="upload-section">
-    <!-- Drag and Drop Area -->
-    <div
-      class="drop-zone"
-      [class.dragging]="isDragging"
-      (dragover)="onDragOver($event)"
-      (dragleave)="onDragLeave($event)"
-      (drop)="onDrop($event)"
-    >
-      <div class="drop-zone-content">
-        <span class="upload-icon">📤</span>
-        <p class="drop-zone-text">Drag and drop your dataset ZIP file here</p>
-        <p class="drop-zone-subtext">or</p>
-        <label for="file-input" class="file-button">
-          Browse Files
-          <input
-            id="file-input"
-            type="file"
-            accept=".zip"
-            (change)="onFileSelected($event)"
-            style="display: none"
-          />
-        </label>
-      </div>
-    </div>
+    <div class="upload-columns">
+      <!-- Left Column: File Upload -->
+      <div class="upload-column left-column">
+        <h3>Upload Dataset File</h3>
 
-    <!-- URL Upload -->
-    <div class="url-upload">
-      <h3>Upload from URL</h3>
-      <div class="url-input-group">
-        <input
-          #urlInput
-          type="url"
-          class="url-input"
-          placeholder="Enter dataset URL..."
-        />
-        <button class="upload-button" (click)="uploadFromUrl(urlInput)">
-          Upload
+        <!-- Dataset Name Input -->
+        <div class="input-group">
+          <label for="dataset-name" class="input-label">Dataset Name:</label>
+          <input
+            #datasetNameInput
+            id="dataset-name"
+            type="text"
+            class="text-input"
+            placeholder="Enter dataset name..."
+            (input)="onNameChange()"
+          />
+        </div>
+
+        <!-- Drag and Drop Area -->
+        <div
+          class="drop-zone"
+          [class.dragging]="isDragging"
+          [class.has-file]="selectedFile"
+          (dragover)="onDragOver($event)"
+          (dragleave)="onDragLeave($event)"
+          (drop)="onDrop($event)"
+        >
+          <div class="drop-zone-content">
+            <span class="upload-icon">{{ selectedFile ? '✓' : '📤' }}</span>
+            <p class="drop-zone-text" *ngIf="!selectedFile">
+              Drag and drop your dataset ZIP file here
+            </p>
+            <p class="drop-zone-text file-selected" *ngIf="selectedFile">
+              {{ selectedFile.name }}
+            </p>
+            <p class="drop-zone-subtext">{{ selectedFile ? 'or choose another' : 'or' }}</p>
+            <label for="file-input" class="file-button">
+              {{ selectedFile ? 'Change File' : 'Browse Files' }}
+              <input
+                id="file-input"
+                type="file"
+                accept=".zip"
+                (change)="onFileSelected($event)"
+                style="display: none"
+              />
+            </label>
+          </div>
+        </div>
+
+        <!-- Upload Button -->
+        <button
+          class="submit-button"
+          [disabled]="!canUpload()"
+          (click)="submitUpload()"
+        >
+          Upload Dataset
         </button>
+      </div>
+
+      <!-- Right Column: URL Upload -->
+      <div class="upload-column right-column">
+        <h3>Upload from URL</h3>
+        <p class="coming-soon">Coming soon...</p>
+        <div class="url-input-group">
+          <label for="url-input" class="input-label">Dataset URL:</label>
+          <input
+            #urlInput
+            id="url-input"
+            type="url"
+            class="text-input"
+            placeholder="Enter dataset URL..."
+            disabled
+          />
+          <button class="submit-button" disabled>
+            Upload from URL
+          </button>
+        </div>
       </div>
     </div>
   </div>
@@ -51,7 +90,52 @@
     <div class="datasets-list">
       <div class="dataset-card" *ngFor="let dataset of datasets">
         <div class="dataset-header">
-          <h3 class="dataset-name">{{ dataset.name }}</h3>
+          <div class="dataset-title">
+            <h3 class="dataset-name" *ngIf="editingDatasetId !== dataset.id">
+              {{ dataset.name }}
+            </h3>
+            <input
+              *ngIf="editingDatasetId === dataset.id"
+              [id]="'edit-input-' + dataset.id"
+              type="text"
+              class="edit-name-input"
+              [value]="dataset.name"
+            />
+          </div>
+          <div class="dataset-actions">
+            <button
+              *ngIf="editingDatasetId !== dataset.id"
+              class="action-button edit-button"
+              (click)="startEdit(dataset.id)"
+              title="Rename dataset"
+            >
+              ✏️
+            </button>
+            <button
+              *ngIf="editingDatasetId === dataset.id"
+              class="action-button save-button"
+              (click)="saveEdit(dataset.id)"
+              title="Save changes"
+            >
+              ✓
+            </button>
+            <button
+              *ngIf="editingDatasetId === dataset.id"
+              class="action-button cancel-button"
+              (click)="cancelEdit()"
+              title="Cancel editing"
+            >
+              ✕
+            </button>
+            <button
+              *ngIf="editingDatasetId !== dataset.id"
+              class="action-button delete-button"
+              (click)="deleteDataset(dataset.id, dataset.name)"
+              title="Delete dataset"
+            >
+              🗑️
+            </button>
+          </div>
           <span class="dataset-status" [ngClass]="getStatusClass(dataset.status)">
             {{ dataset.status }}
           </span>

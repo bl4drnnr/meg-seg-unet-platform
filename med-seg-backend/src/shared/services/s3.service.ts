@@ -1,5 +1,9 @@
 import { Injectable } from '@nestjs/common';
-import { S3Client, DeleteObjectCommand } from '@aws-sdk/client-s3';
+import {
+  S3Client,
+  ListObjectsV2Command,
+  DeleteObjectsCommand
+} from '@aws-sdk/client-s3';
 import { Upload } from '@aws-sdk/lib-storage';
 import * as fs from 'fs';
 import * as path from 'path';
@@ -59,16 +63,38 @@ export class S3Service {
   }
 
   async deleteDirectory(s3Prefix: string): Promise<void> {
-    // For now, we'll implement a basic delete
-    // In production, you'd want to list all objects and delete them
     try {
-      const command = new DeleteObjectCommand({
+      // List all objects with the given prefix
+      const listCommand = new ListObjectsV2Command({
         Bucket: this.bucketName,
-        Key: s3Prefix
+        Prefix: s3Prefix
       });
-      await this.s3Client.send(command);
+
+      const listedObjects = await this.s3Client.send(listCommand);
+
+      if (!listedObjects.Contents || listedObjects.Contents.length === 0) {
+        return;
+      }
+
+      // Delete all objects
+      const deleteCommand = new DeleteObjectsCommand({
+        Bucket: this.bucketName,
+        Delete: {
+          Objects: listedObjects.Contents.map(({ Key }) => ({ Key }))
+        }
+      });
+
+      await this.s3Client.send(deleteCommand);
+
+      // If there are more objects, recursively delete
+      if (listedObjects.IsTruncated) {
+        await this.deleteDirectory(s3Prefix);
+      }
     } catch (error) {
       console.error(`Failed to delete from S3: ${error.message}`);
+      throw new UploadException(
+        `Failed to delete directory from S3: ${error.message}`
+      );
     }
   }
 

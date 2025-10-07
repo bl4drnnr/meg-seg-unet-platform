@@ -29,4 +29,12 @@ export class DatasetService {
 
     return this.http.post<Dataset>(`${this.apiUrl}/upload`, formData);
   }
+
+  updateDataset(id: number, name: string): Observable<Dataset> {
+    return this.http.put<Dataset>(`${this.apiUrl}/${id}`, { name });
+  }
+
+  deleteDataset(id: number): Observable<void> {
+    return this.http.delete<void>(`${this.apiUrl}/${id}`);
+  }
 }
