@@ -96,3 +96,4 @@ meg-seg-backend/*.pid.lock
 meg-seg-backend/report.[0-9]*.[0-9]*.[0-9]*.[0-9]*.json
 
 meg-seg-backend/package-lock.json
+meg-seg-backend/medseg.db

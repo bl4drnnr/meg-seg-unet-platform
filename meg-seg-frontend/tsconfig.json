@@ -6,7 +6,8 @@
     "paths": {
       "@interfaces/*": ["app/shared/interfaces/*"],
       "@components/*": ["app/components/*"],
-      "@shared/*": ["app/shared/*"]
+      "@shared/*": ["app/shared/*"],
+      "@environments/*": ["environments/*"]
     },
     "outDir": "./dist/out-tsc",
     "strict": true,
