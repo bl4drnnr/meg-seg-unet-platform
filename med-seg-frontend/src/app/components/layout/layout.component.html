@@ -1,0 +1,9 @@
+<div class="layout">
+  <app-sidebar [class.hidden]="!isSidebarOpen"></app-sidebar>
+  <main class="main-content">
+    <button class="toggle-sidebar-btn" (click)="toggleSidebar()">
+      {{ isSidebarOpen ? '◀' : '▶' }}
+    </button>
+    <router-outlet></router-outlet>
+  </main>
+</div>
