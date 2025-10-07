@@ -1,0 +1,98 @@
+# See http://help.github.com/ignore-files/ for more about ignoring files.
+
+.DS_Store
+.idea/
+.vscode
+
+# Compiled output
+meg-seg-frontend/dist
+meg-seg-frontend/tmp
+meg-seg-frontend/out-tsc
+meg-seg-frontend/bazel-out
+
+# Node
+meg-seg-frontend/node_modules
+meg-seg-frontend/npm-debug.log
+meg-seg-frontend/yarn-error.log
+
+# IDEs and editors
+meg-seg-frontend/.idea/
+meg-seg-frontend/.project
+meg-seg-frontend/.classpath
+meg-seg-frontend/.c9/
+meg-seg-frontend/*.launch
+meg-seg-frontend/.settings/
+meg-seg-frontend/*.sublime-workspace
+
+# Visual Studio Code
+meg-seg-frontend/.vscode
+
+# Miscellaneous
+meg-seg-frontend/.angular/cache
+meg-seg-frontend/.sass-cache/
+meg-seg-frontend/connect.lock
+meg-seg-frontend/coverage
+meg-seg-frontend/libpeerconnection.log
+meg-seg-frontend/testem.log
+meg-seg-frontend/typings
+
+# System files
+meg-seg-frontend/.DS_Store
+meg-seg-frontend/Thumbs.db
+
+meg-seg-frontend/package-lock.json
+
+# compiled output
+meg-seg-backend/dist
+meg-seg-backend/node_modules
+meg-seg-backend/build
+
+# Logs
+meg-seg-backend/logs
+meg-seg-backend/*.log
+meg-seg-backend/npm-debug.log*
+meg-seg-backend/pnpm-debug.log*
+meg-seg-backend/yarn-debug.log*
+meg-seg-backend/yarn-error.log*
+meg-seg-backend/lerna-debug.log*
+
+# OS
+meg-seg-backend/.DS_Store
+
+# Tests
+meg-seg-backend/coverage
+meg-seg-backend/.nyc_output
+
+# IDEs and editors
+meg-seg-backend/.idea
+meg-seg-backend/.project
+meg-seg-backend/.classpath
+meg-seg-backend/.c9/
+meg-seg-backend/*.launch
+meg-seg-backend/.settings/
+meg-seg-backend/*.sublime-workspace
+
+# IDE - VSCode
+meg-seg-backend/.vscode/
+
+# dotenv environment variable files
+meg-seg-backend/.env
+meg-seg-backend/.env.development.local
+meg-seg-backend/.env.test.local
+meg-seg-backend/.env.production.local
+meg-seg-backend/.env.local
+
+# temp directory
+meg-seg-backend/.temp
+meg-seg-backend/.tmp
+
+# Runtime data
+meg-seg-backend/pids
+meg-seg-backend/*.pid
+meg-seg-backend/*.seed
+meg-seg-backend/*.pid.lock
+
+# Diagnostic reports (https://nodejs.org/api/report.html)
+meg-seg-backend/report.[0-9]*.[0-9]*.[0-9]*.[0-9]*.json
+
+meg-seg-backend/package-lock.json

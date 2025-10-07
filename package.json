@@ -1,0 +1,10 @@
+{
+  "name": "meg-seg",
+  "version": "1.0.0",
+  "description": "MEG-SEG project root",
+  "scripts": {
+    "start:backend": "cd meg-seg-backend && npm run start:dev",
+    "start:frontend": "cd meg-seg-frontend && npm start"
+  },
+  "private": true
+}
